@@ -1,19 +1,42 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <el-row :gutter="10">
+      <el-col :span="6" v-for="(board, index) in hotBoards" :key="index">
+        <hot-search-board
+          :title="board.title"
+          :icon="board.icon"
+          :fetch-url="board.fetchUrl"
+          :type="board.type"
+        />
+      </el-col>
+    </el-row>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import HotSearchBoard from "@/components/HotSearchBoard.vue";
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    HelloWorld
-  }
-}
+    HotSearchBoard,
+  },
+  data() {
+    return {
+      hotBoards: [
+        {
+          title: "百度",
+          icon: require("@/assets/icons/baidu-icon.svg"),
+          type: "baidu",
+        },
+        {
+          title: "抖音",
+          icon: require("@/assets/icons/douyin-icon.svg"),
+          type: "douyin",
+        },
+      ],
+    };
+  },
+};
 </script>
 
 <style>
@@ -24,5 +47,9 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+  background: #f8f9fa; /* 提供一个柔和的背景色 */
+  min-height: 100vh; /* 使用视口高度确保填满整个屏幕 */
+  padding: 0; /* 保持整体布局紧凑，无额外内边距 */
 }
 </style>
+
