@@ -3,7 +3,8 @@ import axios from "axios";
 
 // 创建axios实例并配置基础URL
 const apiClient = axios.create({
-  baseURL: "http://localhost:80/api",
+  baseURL: "http://localhost:9000/semu-li/api",
+  // baseURL: "//sbmy.fun/api",
   headers: {
     "Content-Type": "application/json"
   },

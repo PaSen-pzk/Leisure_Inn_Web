@@ -1,11 +1,5 @@
 <template>
-  <el-card class="custom-card" v-loading="loading">
-    <template #header>
-      <div class="card-title">
-        <img :src="icon" class="card-title-icon" />
-        {{ title }}热榜
-      </div>
-    </template>
+  <el-card class="custom-card">
     <div class="cell-group-scrollable">
       <div
         v-for="item in hotSearchData"
@@ -27,39 +21,17 @@
 </template>
 
 <script>
-import apiService from "@/config/apiService.js";
 export default {
   props: {
     title: String,
     icon: String,
     type: String,
+    hotSearchData:Array
   },
   data() {
-    return {
-      hotSearchData: [],
-      loading:false
-    };
-  },
-  created() {
-    this.fetchData(this.type);
+    return {};
   },
   methods: {
-    fetchData(type) {
-      this.loading = true
-      apiService
-        .get("/hotSearch/queryByType?type=" + type)
-        .then((res) => {
-          // 处理响应数据
-          this.hotSearchData = res.data.data;
-        })
-        .catch((error) => {
-          // 处理错误情况
-          console.error(error);
-        }).finally(() => {
-          // 加载结束
-          this.loading = false; 
-        });
-    },
     getRankingClass(order) {
       if (order === 1) return "top-ranking-1";
       if (order === 2) return "top-ranking-2";
@@ -100,51 +72,31 @@ export default {
   },
 };
 </script>
-
 <style scoped>
 .custom-card {
   background-color: #ffffff;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
+  overflow: hidden; /* 防止子元素溢出卡片范围 */
 }
+
 .custom-card:hover {
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.25);
 }
 
->>> .el-card__header {
-  padding: 10px 18px;
-}
->>> .el-card__body {
-  display: flex;
-  padding: 10px 0px 10px 10px;
-}
-.card-title {
-  display: flex;
-  align-items: center;
-  font-weight: bold;
-  font-size: 16px;
-}
-
-.card-title-icon {
-  fill: currentColor;
-  width: 24px;
-  height: 24px;
-  margin-right: 8px;
-}
-
 .cell-group-scrollable {
-  max-height: 350px;
+  max-height: 100%; /* 设置卡片内容的最大高度 */
   overflow-y: auto;
+  margin-right: -16px; /* 消除内边距对滚动条的影响 */
   padding-right: 16px; /* 恢复内容区域的内边距 */
-  flex: 1;
 }
 
 .cell-wrapper {
   display: flex;
   align-items: center;
-  padding: 8px 8px; /* 减小上下内边距以减少间隔 */
-  border-bottom: 1px solid #e8e8e8; /* 为每个项之间添加分割线 */
+  padding: 10px 16px; /* 统一内边距 */
+  border-bottom: 1px solid #e8e8e8;
 }
 
 .cell-order {
@@ -152,44 +104,74 @@ export default {
   text-align: left;
   font-size: 16px;
   font-weight: 700;
-  margin-right: 8px;
-  color: #7a7a7a; /* 统一非特殊序号颜色 */
+  color: #7a7a7a;
 }
 
-/* 通过在cell-heat类前面添加更多的父级选择器，提高了特异性 */
+.cell-title {
+  font-size: 14px;
+  color: #495060;
+  flex-grow: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  text-align: left;
+}
+
 .cell-heat {
   min-width: 50px;
   text-align: right;
-  font-size: 12px;
+  font-size: 14px;
   color: #7a7a7a;
 }
-.cell-title {
-  font-size: 13px;
-  color: #495060;
-  line-height: 22px;
-  flex-grow: 1;
-  overflow: hidden;
-  text-align: left; /* 左对齐 */
-  text-overflow: ellipsis; /* 超出部分显示省略号 */
-}
+
 .top-ranking-1 .cell-order {
-  color: #fadb14;
-} /* 金色 */
-.top-ranking-2 .cell-order {
-  color: #a9a9a9;
-} /* 银色 */
-.top-ranking-3 .cell-order {
-  color: #d48806;
-} /* 铜色 */
-/* 新增的.hover-effect类用于标题的hover状态 */
-.cell-title.hover-effect {
-  cursor: pointer; /* 鼠标悬停时显示指针形状 */
-  transition: color 0.3s ease; /* 平滑地过渡颜色变化 */
+  color: #fadb14; /* 金色 */
 }
 
-/* 当鼠标悬停在带有.hover-effect类的元素上时改变颜色 */
+.top-ranking-2 .cell-order {
+  color: #a9a9a9; /* 银色 */
+}
+
+.top-ranking-3 .cell-order {
+  color: #d48806; /* 铜色 */
+}
+
+.cell-title.hover-effect {
+  transition: color 0.3s ease;
+}
+
 .cell-title.hover-effect:hover {
   color: #409eff; /* 或者使用你喜欢的颜色 */
 }
-</style>
 
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .custom-card {
+    border-radius: 0; /* 扁平化边框 */
+    box-shadow: none; /* 移除阴影 */
+    margin-bottom: 10px; /* 减小底部间隙 */
+  }
+
+  .cell-group-scrollable {
+    margin-right: -12px; /* 消除内边距影响 */
+    padding-right: 12px; /* 补充内容内边距 */
+  }
+
+  .cell-wrapper {
+    padding: 6px 12px; /* 减小单元格内边距 */
+  }
+
+  .cell-order {
+    font-size: 16px; /* 调整序号字体大小 */
+  }
+
+  .cell-title {
+    font-size: 14px; /* 调整标题字体大小 */
+    margin-left: 12px; /* 调整间距 */
+  }
+
+  .cell-heat {
+    font-size: 12px; /* 调整热度指数字体大小 */
+  }
+}
+</style>
