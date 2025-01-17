@@ -36,6 +36,10 @@ Vue.use(Main)
 Vue.use(Dialog)
 import "element-ui/lib/theme-chalk/index.css"
 
+//引入转盘组件
+import VueLuckyCanvas from '@lucky-canvas/vue'
+Vue.use(VueLuckyCanvas)
+
 //引入axios
 import axios from 'axios';
 Vue.prototype.$ajax = axios;
