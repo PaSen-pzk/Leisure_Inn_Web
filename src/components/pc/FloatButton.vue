@@ -10,10 +10,10 @@
       @touchend="mouseup"
       @click="onClick"
       ref="flbutton"
-    >
+    > 
       <span class="title">{{ title }}</span>
     </div>
-    <!-- <div
+    <div
       :style="{ left: left + 'px', top: top + 'px' }"
       v-if="menuFlag"
       :class="menuPosition === 'right' ? 'menu-item-right':'menu-item-left'"
@@ -22,7 +22,7 @@
            @click="circleClick(item,index)" :key="index">
         <span :class="'text'+index">{{ item }}</span>
       </div>
-    </div> -->
+    </div>
   </div>
 </template>
 
@@ -164,22 +164,20 @@ export default {
       const ballWidth = 110; // 悬浮球的宽度
       const ballHeight = 110; // 悬浮球的高度
       
-      console.log("left:" + this.left);
-      // 检查悬浮球是否需要吸附到左边缘
-      if (this.left < ballWidth / 2) {
-        this.left = 0;
-      }
       // 检查悬浮球是否需要吸附到右边缘
-      else if (this.left > viewportWidth - ballWidth / 2) {
-        this.left = viewportWidth - ballWidth;
+      if (this.left > (viewportWidth - ballWidth) / 2) {
+        this.$refs.flbutton.style.left = (viewportWidth - ballWidth)+ "px";
+      } else {
+        // 检查悬浮球是否需要吸附到左边缘
+        this.$refs.flbutton.style.left = 0;
       }
       // 检查悬浮球是否需要吸附到上边缘
       if (this.top < ballHeight / 2) {
-        this.top = 0;
+        this.$refs.flbutton.style.top = 0;
       }
       // 检查悬浮球是否需要吸附到下边缘
-      else if (this.top > viewportHeight - ballHeight / 2) {
-        this.top = viewportHeight - ballHeight;
+      else if (this.top > (viewportHeight - ballHeight) / 2) {
+        this.$refs.flbutton.style.top = (viewportHeight - ballHeight)+ "px";
       }
     }
 
